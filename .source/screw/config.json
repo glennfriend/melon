@@ -1,0 +1,6 @@
+{
+    "app_name": "screw",
+    "dev_server_ssl": false,
+    "dev_server_host": "sb.tw",
+    "dev_server_port": "8080"
+}
