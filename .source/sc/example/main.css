@@ -1,0 +1,149 @@
+/*
+  IR_Black style (c) Vasily Mikhailitchenko <vaskas@programica.ru>
+*/
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  background: #000;
+  color: #f8f8f8;
+  -webkit-text-size-adjust: none;
+}
+
+.hljs-shebang,
+.hljs-comment {
+  color: #7c7c7c;
+}
+
+.hljs-keyword,
+.hljs-tag,
+.tex .hljs-command,
+.hljs-request,
+.hljs-status,
+.clojure .hljs-attribute {
+  color: #96cbfe;
+}
+
+.hljs-sub .hljs-keyword,
+.method,
+.hljs-list .hljs-title,
+.nginx .hljs-title {
+  color: #ffffb6;
+}
+
+.hljs-string,
+.hljs-tag .hljs-value,
+.hljs-cdata,
+.hljs-filter .hljs-argument,
+.hljs-attr_selector,
+.apache .hljs-cbracket,
+.hljs-date,
+.coffeescript .hljs-attribute {
+  color: #a8ff60;
+}
+
+.hljs-subst {
+  color: #daefa3;
+}
+
+.hljs-regexp {
+  color: #e9c062;
+}
+
+.hljs-title,
+.hljs-sub .hljs-identifier,
+.hljs-pi,
+.hljs-decorator,
+.tex .hljs-special,
+.hljs-type,
+.hljs-constant,
+.smalltalk .hljs-class,
+.hljs-doctag,
+.nginx .hljs-built_in {
+  color: #ffffb6;
+}
+
+.hljs-symbol,
+.ruby .hljs-symbol .hljs-string,
+.hljs-number,
+.hljs-variable,
+.vbscript,
+.hljs-literal,
+.hljs-name {
+  color: #c6c5fe;
+}
+
+.css .hljs-tag {
+  color: #96cbfe;
+}
+
+.css .hljs-rule .hljs-property,
+.css .hljs-id {
+  color: #ffffb6;
+}
+
+.css .hljs-class {
+  color: #fff;
+}
+
+.hljs-hexcolor {
+  color: #c6c5fe;
+}
+
+.hljs-number {
+  color:#ff73fd;
+}
+
+.coffeescript .javascript,
+.javascript .xml,
+.tex .hljs-formula,
+.xml .javascript,
+.xml .vbscript,
+.xml .css,
+.xml .hljs-cdata {
+  opacity: 0.7;
+}
+
+body {
+    margin: 15px;
+}
+pre, code {
+    font-family: Hack, "Source Code Pro", Inconsolata, GulimChe, Tahoma, sans-serif;
+}
+textarea{
+    padding: 5px;
+    margin-top: 0.25rem;
+    width: 100%;
+}
+h2 {
+    margin-top: 3rem;
+}
+h4 {
+    padding: .6rem;
+    margin-top: 0;
+    margin-bottom: 1.25rem;
+    border: 1px solid #f0ad4e;
+    border-top: 0;
+    border-left-width: .25rem;
+
+}
+.js-button {
+    position: relative;
+    top: -2rem;
+    display: block;
+    margin:  .2rem .2rem;
+    padding: .25rem .5rem;
+    font-size: 75%;
+    cursor: pointer;
+    border-radius: .25rem;
+    float:right; 
+    color: #ffffff;
+    background-color: transparent;
+}
+.js-button:hover {
+    background-color: #0275d8;
+}
+.js-show {
+    margin: .5rem 0 0 0;
+}

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Example Page</title>
+  <!--
+    live reaload
+        - https://localhost:35729/livereload.js
+        - http://192.168.56.101:35729/livereload.js
+  -->
+  <script src="http://sb.tw:35729/livereload.js"></script>
+</head>
+<body>
+
+  <div class="sc_icon"></div>
+  <a href="demo.htm" target="_blank">demo</a>
+
+  <script src="dist/app.js"></script>
+  <p>注意!</p>
+  <ul>
+    <li>SC 是在載入的時候, 就立即對內容進行了 render</li>
+    <li>所以如果開發者是使用 grease monkey 載入的方式</li>
+    <li>那麼在開發模式的情形下</li>
+    <li>會有來不及載入 javascript function 的問題</li>
+    <li>以至於就算使用 jquery ready 也無法立即載入</li>
+  </ul>
+
+</body>
+</html>

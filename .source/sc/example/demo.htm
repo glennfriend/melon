@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <script src="http://sb.tw:35729/livereload.js"></script>
+        <link rel="stylesheet" href="main.css" />
+        <script src="main.js"></script>
+        <script src="dist/app.js"></script>
+    </head>
+    <body>
+        <div style="width:1000px">
+
+
+<!-- ------------------------------------------------------------ -->
+<h2>圖片框</h2>
+<div>
+    <img class="sc-image-photo" width="60" src="http://img.htmleaf.com/1506/img-border-demo.jpg">
+</div>
+<pre class="js-show"><code class="html">
+    <img class="sc-image-photo" src="">
+</code></pre>
+
+<!-- ------------------------------------------------------------ -->
+<h2>點擊後顯示隱藏的內容</h2>
+<div>
+    <p>
+        <span class="sc-show-content-main" data-sc-id="1">item-1</span>
+        <span class="sc-show-content-sub"  data-sc-id="1">(item-1 content to show)</span>
+    </p>
+    <p>
+        <span class="sc-show-content-main" data-sc-id="2">item-2</span>
+        <span class="sc-show-content-sub"  data-sc-id="2">(item-2 content to show)</span>
+    </p>
+</div>
+<pre class="js-show"><code class="html">
+    <p>
+        <span class="sc-show-content-main" data-sc-id="1">item-1</span>
+        <span class="sc-show-content-sub"  data-sc-id="1">(item-1 content to show)</span>
+    </p>
+    <p>
+        <span class="sc-show-content-main" data-sc-id="2">item-2</span>
+        <span class="sc-show-content-sub"  data-sc-id="2">(item-2 content to show)</span>
+    </p>
+
+    <script>
+        sc_show_content_init();
+    </script>
+</code></pre>
+<h4>
+    <div>- 一開始隱藏的內容, 點擊後顯示</div>
+    <div>- 讓 tag 一次點擊後才顯示某些訊息</div>
+    <div>- 讓 tag 二次點擊後可隱藏原本訊息</div>
+</h4>
+
+<!-- ------------------------------------------------------------ -->
+<h2>糢糊文字</h2>
+<div>
+    <div>
+        <p>today is good day 1</p>
+        <p>today is good day 2</p>
+    </div>
+    <div class="sc-text-blurry">
+        <p>today is good day 3</p>
+        <p>today is good day 4</p>
+    </div>
+</div>
+<pre class="js-show"><code class="html">
+    <div class="sc-text-blurry"></div>
+</code></pre>
+
+<!-- ------------------------------------------------------------ -->
+<h2>載入效果</h2>
+<div>
+    <div class="sc-loading">loading</div>
+</div>
+<pre class="js-show"><code class="html">
+    <div class="sc-loading">loading</div>
+</code></pre>
+<h4>
+    <div>- 用文字的方式展示 loading ... 動態的效果</div>
+</h4>
+
+
+
+
+        </div>
+
+        <script>
+            everyPageLoad();
+            new Clipboard('.js-button');
+        </script>
+
+        <script>
+            // 範例所須的 initiation 程式碼
+            sc_show_content_init();
+        </script>
+
+
+    </body>
+</html>
