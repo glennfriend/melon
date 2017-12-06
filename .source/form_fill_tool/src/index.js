@@ -169,6 +169,7 @@ function pasteRun()
 {
     var type,name,data;
     let elements = getAllElements();
+    let updateCount = 0;
     for (let index in elements) {
         let element = elements[index];
 
@@ -199,23 +200,19 @@ function pasteRun()
         else {
             //nothing
         }
+
+        updateCount++;
     }
-    
-    dialog.basic('Paste');
+
+    if (updateCount > 0) {
+        dialog.basic('Paste ' + updateCount + ' count data');
+    }
+    else {
+        dialog.basic('Not paste anything');
+    }
+
 }
 
-
-
-
-
-var _help = '';
-function _add_help(str) {
-    _help += str+"<br>\n";
-}
-
-function _new_help(str) {
-    _help = str;
-}
 
 function clearRun() {
 
