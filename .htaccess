@@ -2,8 +2,30 @@
 # always setting
 # ==================================================
 
-#
+# no index
 Options -Indexes
+
+# private files
+<FilesMatch "\.(bak|backup|save|config|inc|ini|env|sql|log|tar|gz|zip)$">
+    Order allow,deny
+    Deny from all
+    Satisfy all
+</FilesMatch>
+
+# linux
+<FilesMatch "\.(sh|swp|swo)$">
+    Order allow,deny
+    Deny from all
+    Satisfy all
+</FilesMatch>
+
+# ~ tag
+#   -> index.php~
+<FilesMatch "~">
+    Order allow,deny
+    Deny from all
+    Satisfy all
+</FilesMatch>
 
 # 任何以 "." 開頭的 目錄 或 檔案
 #   -> .git/
