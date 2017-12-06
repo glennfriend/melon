@@ -20,7 +20,7 @@
         loadExternalScript(getScheme(isSsl) + '://' + getHostname() + ':8080/dist/app.js' + '?' + Date.now());
     }
     else if (type==2) {
-        loadExternalScript(getScheme(isSsl) + '://' + getHostname() + '/melon/public/screw/app.js');
+        loadExternalScript(getScheme(isSsl) + '://' + getHostname() + '/melon/screw/app.js');
     }
 })();
 
