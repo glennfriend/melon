@@ -1,4 +1,3 @@
-import util from './common/browserUtility.js';
 import domUtil from './common/domUtility.js';
 import stringUtil from './common/stringUtility.js';
 import formManager from './common/formManager.js';
@@ -12,32 +11,16 @@ import './styles.css';
 //  init
 // --------------------------------------------------------------------------------
 localStorageManager.init(localStorage, 'fft_');
-//console.log(localStorageManager.getAll());
-//console.log(localStorageManager.get('update_time'));
-//console.log(localStorageManager.get('sub_status[]'));
 
 
 // --------------------------------------------------------------------------------
 // 
 // --------------------------------------------------------------------------------
 (function(){
-    // dev only
-    // console.clear();
-
-    //
     Mousetrap.bind(['alt+1'], rewriteForm);
     Mousetrap.bind(['alt+2'], saveForm);
     Mousetrap.bind(['alt+3'], showStorageForm);
     Mousetrap.bind(['alt+4'], clearForm);
-
-
-    var names = getAllUniqueElementNames();
-    for (let index in names) {
-        let name = names[index];
-        let value = formManager.getValue(name, true);
-        // console.log(name + ' = ' + value);
-    }
-    
 })();
 
 function rewriteForm(e)

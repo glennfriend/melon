@@ -1,9 +1,20 @@
 
-// --------------------------------------------------------------------------------
-//  local storage 儲存時只能是 string
-//  所以如果值是 array, object 就必須要配合轉型
-//  該程式已處理基本的轉型
-// --------------------------------------------------------------------------------
+/**
+ * local storage 儲存時只能是 string
+ * 所以如果值是 array, object 就必須要配合轉型
+ * 該程式已處理基本的轉型
+ *
+ * @dependence "node-localstorage": "^1.3.0"
+ *
+ * e.g.
+ *      localStorageManager.init(localStorage, 'fft_');
+ *      localStorageManager.set('hello', 'world');
+ *      localStorageManager.set('age', 13);
+ *      localStorageManager.set('interest', ['food', 'movie']);
+ *      localStorageManager.get('hello');
+ *      localStorageManager.getAll();
+ *
+ */
 const localStorageManager = {
 
     prefix: 'please_setting_the_value_',
