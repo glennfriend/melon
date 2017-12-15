@@ -2,7 +2,7 @@ import alertify from 'alertify.js';
 
 const dialog =
 {
-    basic: function(message)
+    basic: function(message, second=3)
     {
         message = `
             <div style="font-family: hack; font-size: 8px;">
@@ -11,13 +11,13 @@ const dialog =
         `;
 
         alertify
-            .delay(3000)
+            .delay(second * 1000)
             .logPosition("bottom right")
             .log(message)
         ;
     },
     
-    show: function show(message)
+    show: function show(message, second=10)
     {
         message = `
             <input type="button" value="Close" 
@@ -29,7 +29,7 @@ const dialog =
         `;
 
         alertify
-            .delay(99000)   // 1000 = 1秒
+            .delay(second * 1000)   // 1000 = 1秒
             .logPosition("bottom right")
             .closeLogOnClick(false)
             .log(message, function(ev) {

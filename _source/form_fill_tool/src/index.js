@@ -1,4 +1,5 @@
 import util from './common/browserUtility.js';
+import domUtil from './common/domUtility.js';
 import stringUtil from './common/stringUtility.js';
 import formManager from './common/formManager.js';
 import dialog from './common/dialog.js';
@@ -26,7 +27,7 @@ localStorageManager.init(localStorage, 'fft_');
     //
     Mousetrap.bind(['alt+1'], rewriteForm);
     Mousetrap.bind(['alt+2'], saveForm);
-    Mousetrap.bind(['alt+3'], updateStorageForm);
+    Mousetrap.bind(['alt+3'], showStorageForm);
     Mousetrap.bind(['alt+4'], clearForm);
 
 
@@ -51,9 +52,9 @@ function saveForm(e)
     return false;
 }
 
-function updateStorageForm(e)
+function showStorageForm(e)
 {
-    updateRun();
+    showStorageRun();
     return false;
 }
 
@@ -104,7 +105,7 @@ function getConvertElementMessage(element, value)
     let type = element.type;
     switch(type) {
         case 'select-one':      type = 'sel-one';   break;
-        case 'select-multiple': type = 'sel-many';  break;
+        case 'select-multiple': type = 'sel-mult';  break;
     }
 
     let myType = type + php.str_repeat("&nbsp;", (8-type.length));
@@ -117,30 +118,43 @@ function copyRun()
 {
     let names = getAllUniqueElementNames();
     let message = '';
+    let otherMessage = '';
+    let copyCount = 0;
+    let totalCount = 0;
     for (let index in names) {
+
+        totalCount++;
         let name = names[index];
         let value = formManager.getValue(name);
         let element = document.getElementsByName(name)[0];
 
         // 不儲存空值
         if (value === null || value === undefined || value === "") {
+            otherMessage += '&nbsp; ' + getConvertElementMessage(element, '');
+            otherMessage += '<br>';
             continue;
         }
         // 不儲存空陣列
         if (Object.prototype.toString.call(value) === '[object Array]' && value.length < 1) {
+            otherMessage += '&nbsp; ' + getConvertElementMessage(element, '');
+            otherMessage += '<br>';
             continue;
         }
 
         // 儲存到 local-storage
         localStorageManager.set(name, value);
+        copyCount++;
         
         // 顯示
-        message += getConvertElementMessage(element, value);
+        message += '+ ' + getConvertElementMessage(element, value);
         message += '<br>';
     }
 
     if (message) {
-        dialog.show(message);
+        otherMessage += '<br>';
+        dialog.show(
+            `${message} ${otherMessage} Copy ${copyCount}/${totalCount} items count`
+        );
     }
     else {
         dialog.show('not copy anything');
@@ -151,6 +165,7 @@ function pasteRun()
 {
     let names = getAllUniqueElementNames();
     let message = '';
+    let otherMessage = '';
     let updateCount = 0;
     let totalCount = 0;
     for (let index in names) {
@@ -163,7 +178,9 @@ function pasteRun()
         let value = localStorageManager.get(name);
 
         // 不理會空值
-        if (value === null || value === undefined || value === "") {
+        if (value === null || value === undefined || value === '') {
+            otherMessage += '&nbsp; ' + getConvertElementMessage(element, '');
+            otherMessage += '<br>';
             continue;
         }
 
@@ -171,12 +188,15 @@ function pasteRun()
         formManager.setValue(name, value);
         
         // 顯示
-        message += getConvertElementMessage(element, value);
+        message += 'v ' + getConvertElementMessage(element, value);
         message += '<br>';
     }
 
     if (totalCount > 0) {
-        dialog.basic('Paste ' + updateCount + '/' + totalCount + ' items count');
+        otherMessage += '<br>';
+        dialog.show(
+            `${message} ${otherMessage} Paste ${updateCount}/${totalCount} items count`
+        );
     }
     else {
         dialog.basic('Not paste anything');
@@ -184,22 +204,27 @@ function pasteRun()
 }
 
 /**
- * 控制那些 form 不要覆蓋回去
+ * 顯示 local storage 裡面的值
  */
-function updateRun()
+function showStorageRun()
 {
     let all = localStorageManager.getAll();
-    let msg = '';
+    let message = '';
 
     for (let key in all)
     {
         var value = all[key];
-        // msg += `<div>[Enable] [Disable] ${key}</div>`
-        msg += `<div>${key}</div>`
+        message += `
+            <div>
+                <a href="javascript:void(0)"
+                   style="color: #ff8888;"
+                   onclick="publicModule.remove('${key}'); publicModule.removeElement(this);">Remove</a>
+                ${key}
+            </div>`;
     }
 
-    if (msg) {
-        dialog.show(`<div>${msg}</div>`);
+    if (message) {
+        dialog.show(`<div>${message}</div>`);
     }
     else {
         dialog.basic(`<div>Nothing</div>`);
@@ -215,7 +240,7 @@ function clearRun() {
     }
 
     if (len) {
-        publicModule.clearAll();
+        localStorageManager.clearAll();
         
     }
     dialog.basic(`<div>Clear ${len} items count</div>`);
@@ -229,11 +254,14 @@ function clearRun() {
 // --------------------------------------------------------------------------------
 window.publicModule =
 {
-    clearAll: function()
+    remove: function(key)
     {
-        localStorageManager.clearAll();
+        localStorageManager.remove(key);
+    },
+
+    removeElement: function(element, layer=2)
+    {
+        domUtil.removeElement(element, layer);
     },
 };
 
-//window.getAllUniqueElementNames = getAllUniqueElementNames;
-//window.formManager = formManager;
