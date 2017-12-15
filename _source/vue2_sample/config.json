@@ -1,0 +1,6 @@
+{
+    "app_name": "vue2_sample",
+    "dev_server_ssl": true,
+    "dev_server_host": "sb.tw",
+    "dev_server_port": "8080"
+}
