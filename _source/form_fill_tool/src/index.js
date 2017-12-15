@@ -1,4 +1,6 @@
 import util from './common/browserUtility.js';
+import stringUtil from './common/stringUtility.js';
+import formManager from './common/formManager.js';
 import dialog from './common/dialog.js';
 import localStorageManager from './common/localStorageManager.js';
 import mousetrap from 'mousetrap';
@@ -19,12 +21,22 @@ localStorageManager.init(localStorage, 'fft_');
 // --------------------------------------------------------------------------------
 (function(){
     // dev only
-    console.clear();
+    // console.clear();
 
     //
     Mousetrap.bind(['alt+1'], rewriteForm);
     Mousetrap.bind(['alt+2'], saveForm);
-    Mousetrap.bind(['alt+3'], clearForm);
+    Mousetrap.bind(['alt+3'], updateStorageForm);
+    Mousetrap.bind(['alt+4'], clearForm);
+
+
+    var names = getAllUniqueElementNames();
+    for (let index in names) {
+        let name = names[index];
+        let value = formManager.getValue(name, true);
+        // console.log(name + ' = ' + value);
+    }
+    
 })();
 
 function rewriteForm(e)
@@ -39,6 +51,12 @@ function saveForm(e)
     return false;
 }
 
+function updateStorageForm(e)
+{
+    updateRun();
+    return false;
+}
+
 function clearForm(e)
 {
     clearRun();
@@ -50,25 +68,35 @@ function clearForm(e)
 // --------------------------------------------------------------------------------
 function getAllElements()
 {
-    let elements;
-    var allElements = [];
+    var elements = [];
+    var allElements = document.querySelectorAll("input, textarea, select");
+    for (let key in allElements) {
+        if (! allElements.hasOwnProperty(key)) {
+            continue;
+        }
+        var el = allElements[key];
+        if (! el.name) {
+            continue;
+        }
 
-    //
-    elements = document.querySelectorAll("input");
-    for (let key in elements) {
-        if (elements.hasOwnProperty(key)) {
-            allElements.push(elements[key]);
-        } 
+        elements.push(el);
     }
 
-    elements = document.querySelectorAll("select");
-    for (let key in elements) {
-        if (elements.hasOwnProperty(key)) {
-            allElements.push(elements[key]);
-        } 
+    return elements;
+}
+
+function getAllUniqueElementNames()
+{
+    var names = [];
+    var allElements = getAllElements();
+    for (let key in allElements) {
+        var elementName = allElements[key].name;
+        if (names.indexOf(elementName) === -1) {
+            names.push(elementName);
+        }
     }
 
-    return allElements;
+    return names;
 }
 
 function getConvertElementMessage(element, value)
@@ -80,80 +108,35 @@ function getConvertElementMessage(element, value)
     }
 
     let myType = type + php.str_repeat("&nbsp;", (8-type.length));
-    if (value.length > 100) {
-        value = php.htmlspecialchars(value.substr(0, 100)) + '<span style="color:#6666ff"> ...</span>';
-    }
-    else {
-        value = php.htmlspecialchars(value);
-    }
-
+    value = php.htmlspecialchars(value);
+    value = stringUtil.cropWord(value, 50, '<span style="color:#6666ff"> ...</span>')
     return myType + ' <span style="color:#66ff66">' + element.name + '</span> ' + value;
 }
 
 function copyRun()
 {
-    var elements = getAllElements();
-    var message = '';
-    for (let index in elements) {
-        var element = elements[index];
-        
-        if (! element.name) {
+    let names = getAllUniqueElementNames();
+    let message = '';
+    for (let index in names) {
+        let name = names[index];
+        let value = formManager.getValue(name);
+        let element = document.getElementsByName(name)[0];
+
+        // 不儲存空值
+        if (value === null || value === undefined || value === "") {
+            continue;
+        }
+        // 不儲存空陣列
+        if (Object.prototype.toString.call(value) === '[object Array]' && value.length < 1) {
             continue;
         }
 
-
-        //
-        if (-1 != ["text", "textarea", "hidden", "email", "tel", "date"].indexOf(element.type)) {
-            if( element.value!='' ) {
-                localStorageManager.set( element.name , element.value );
-                message += getConvertElementMessage(element, element.value);
-                message += '<br>';
-            }
-
-        } else if ( element.type=="checkbox" ) {
-            // save true/false
-            localStorageManager.set( element.name , element.checked );
-            message += getConvertElementMessage(element, element.checked);
-            message += '<br>';
-
-        } else if (element.type=="radio") {
-            if (element.checked===true) {
-                // save value
-                localStorageManager.set( element.name , element.value );
-                message += getConvertElementMessage(element, element.value);
-                message += '<br>';
-            }
-
-        } else if (element.type=="select-one") {
-            for (var select_index=0 ; select_index < element.length ; select_index++ ) {
-                if( element[select_index].selected===true &&
-                    element[select_index].value!='' &&
-                    element[select_index].value!=0 )
-                 {
-                    localStorageManager.set( element.name , select_index );
-                    message += getConvertElementMessage(element, element.value);
-                    message += '<br>';
-                }
-            }
-
-        } else if ( element.type=="select-multiple" ) {
-            for( var select_index=0 ; select_index < element.length ; select_index++ ) {
-                if( element[select_index].selected===true &&
-                    element[select_index].value!='' &&
-                    element[select_index].value!=0 )
-                 {
-                    localStorageManager.set( element.name , select_index );
-                    message += getConvertElementMessage(element, element.value);
-                    message += '<br>';
-                }
-            }
-
-        } else {
-            // nothing
-            message += getConvertElementMessage(element, '? (not save)');
-            message += '<br>';
-        }
-
+        // 儲存到 local-storage
+        localStorageManager.set(name, value);
+        
+        // 顯示
+        message += getConvertElementMessage(element, value);
+        message += '<br>';
     }
 
     if (message) {
@@ -162,78 +145,84 @@ function copyRun()
     else {
         dialog.show('not copy anything');
     }
-
 }
 
 function pasteRun()
 {
-    var type,name,data;
-    let elements = getAllElements();
+    let names = getAllUniqueElementNames();
+    let message = '';
     let updateCount = 0;
-    for (let index in elements) {
-        let element = elements[index];
+    let totalCount = 0;
+    for (let index in names) {
+    
+        totalCount++;
+        let name = names[index];
+        let element = document.getElementsByName(name)[0];
 
-        if (! element.name) {
+        // 讀取自 local-storage
+        let value = localStorageManager.get(name);
+
+        // 不理會空值
+        if (value === null || value === undefined || value === "") {
             continue;
-        }
-
-        type = element.type;
-        name = element.name;
-        data = localStorageManager.get( name );
-        if (null === data) {
-            continue;
-        }
-
-        if (-1 != ["text", "textarea", "email", "tel", "date"].indexOf(type)) {
-            try{ element.value = data; } catch(e) {}
-        }
-        else if ( type=="checkbox" ) {
-            try{ element.checked = data; } catch(e) {}
-        }
-        else if ( type=="radio" ) {
-            if( element.value != data ) { continue; }
-            try{ element.checked = true; } catch(e) {}
-        }
-        else if ( type=="select-one" ) {
-            try{ element[data].selected = true; } catch(e) {}
-        }
-        else {
-            //nothing
         }
 
         updateCount++;
+        formManager.setValue(name, value);
+        
+        // 顯示
+        message += getConvertElementMessage(element, value);
+        message += '<br>';
     }
 
-    if (updateCount > 0) {
-        dialog.basic('Paste ' + updateCount + ' count data');
+    if (totalCount > 0) {
+        dialog.basic('Paste ' + updateCount + '/' + totalCount + ' items count');
     }
     else {
         dialog.basic('Not paste anything');
     }
-
 }
 
-
-function clearRun() {
-
+/**
+ * 控制那些 form 不要覆蓋回去
+ */
+function updateRun()
+{
     let all = localStorageManager.getAll();
     let msg = '';
 
     for (let key in all)
     {
+        var value = all[key];
         // msg += `<div>[Enable] [Disable] ${key}</div>`
         msg += `<div>${key}</div>`
     }
 
     if (msg) {
-        let message = `<div>${msg}</div><input type="button" value="Delete All" onclick="publicModule.clearAll()">`;
-        dialog.show(message);
+        dialog.show(`<div>${msg}</div>`);
     }
     else {
         dialog.basic(`<div>Nothing</div>`);
     }
-
 }
+
+function clearRun() {
+
+    let all = localStorageManager.getAll();
+    let len = 0;
+    for (let index in all) {
+        len++;
+    }
+
+    if (len) {
+        publicModule.clearAll();
+        
+    }
+    dialog.basic(`<div>Clear ${len} items count</div>`);
+}
+
+
+
 
 // --------------------------------------------------------------------------------
 //  public to window
@@ -245,3 +234,6 @@ window.publicModule =
         localStorageManager.clearAll();
     },
 };
+
+//window.getAllUniqueElementNames = getAllUniqueElementNames;
+//window.formManager = formManager;

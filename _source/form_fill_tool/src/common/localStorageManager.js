@@ -1,7 +1,8 @@
 
 // --------------------------------------------------------------------------------
-//  local storage 如果儲存 object 須要配合 JSON.stringify & JSON.parse 使用
-//  但是實作上發生未知的錯誤, 所以目前使用分散的變數來儲存
+//  local storage 儲存時只能是 string
+//  所以如果值是 array, object 就必須要配合轉型
+//  該程式已處理基本的轉型
 // --------------------------------------------------------------------------------
 const localStorageManager = {
 
@@ -23,19 +24,49 @@ const localStorageManager = {
     },
 
     remove: function(name) {
-        var key = this.prefix + name;
+        let key = this.prefix + name;
         this.localStorage.removeItem(key);
     },
 
+    /**
+     * 儲存時要轉型
+     */
     set: function(name, value) {
-        var key = this.prefix + name;
-        this.localStorage.setItem(key, value);
+        let key = this.prefix + name;
+        let type = Object.prototype.toString.call(value);
+
+        this.localStorage.setItem(key, type + ":" + value.toString());
     },
 
+    /**
+     * 讀取時要依 type 轉型
+     */
     get: function(name)
     {
-        var key = this.prefix + name;
-        return this.localStorage.getItem(key);
+        let key = this.prefix + name;
+        let storageValue = this.localStorage.getItem(key);
+        if (! storageValue) {
+            return null;
+        }
+
+        let index = storageValue.indexOf(':');
+        if (index === -1) {
+            return undefined;
+        }
+        
+        let type  = storageValue.substr(0, index);
+        let value =  storageValue.substr(index+1);
+        
+        // console.log(type);
+        if (type === '[object Array]') {
+            return value.split(',');
+        }
+        //else if (type === '[object Object]') {
+        //    TODO: 請嘗試轉型 !!!!
+        //}
+        else {
+            return value;
+        }
     },
 
     getAll: function()

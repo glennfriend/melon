@@ -11,7 +11,7 @@ const dialog =
         `;
 
         alertify
-            .delay(2000)
+            .delay(3000)
             .logPosition("bottom right")
             .log(message)
         ;
@@ -20,8 +20,10 @@ const dialog =
     show: function show(message)
     {
         message = `
-            <input type="button" value="Close" onclick=this.parentElement.remove() style="float:right;">
-            <div style="font-family: hack; font-size: 8px;">
+            <input type="button" value="Close" 
+                   onclick=this.parentElement.remove()
+                   style="float:right;">
+            <div style="font-family: hack; font-size: 8px; min-width:300px;">
                 ${message}
             </div>
         `;
