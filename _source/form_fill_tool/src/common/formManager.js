@@ -42,7 +42,6 @@ const formManager = {
             case 'email':
             case 'tel':
             case 'date':
-            case 'text':
                 result = element.value;
                 break;
             case 'radio':
