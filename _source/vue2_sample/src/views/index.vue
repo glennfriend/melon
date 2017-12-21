@@ -15,7 +15,4 @@ export default {
 </script>
 
 <style>
-body {
-    font-size: 20px;
-}
 </style>

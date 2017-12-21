@@ -6,7 +6,7 @@
             <router-link to="/live_cycle">Life Cycle</router-link>
         </div>
         <div>----</div>
-        <div>
+        <div class="container-fluid">
             <router-view></router-view>
         </div>
     </div>

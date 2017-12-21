@@ -1,31 +1,35 @@
 <template>
-    <div>
+<div class="row">
+    <div class="col-md-12">
+
+        <span v-model="render_count">{{ render_count }}</span>
 
         <div>
             <div v-once> {{ message }} </div>
             <div v-html="message"></div>
         </div>
 
-        <p>
-            <input type="text" placeholder="first_name"
+        <div class="form-group">
+            <input type="text" name="first_name" class="form-control" placeholder="first_name"
                 autofocus
-                @click="doFirstName()"
                 v-model="first_name"
+                :class="{'is-invalid':error.first_name }"
+                data-validate="required|min:5"
             >
-        </p>
+        </div>
 
-        <p id="abc">
-            <input type="email" placeholder="your@email.com"
+        <div class="form-group">
+            <label for="emailFor">Email address</label>
+            <input type="email" name="email" class="form-control" id="emailFor" placeholder="your@email.com"
+                :class="{'is-invalid':error.email }"
+                v-model="email"
+                data-validate="required|email">
+            <div class="invalid-feedback" v-show="error.email">{{ error.email }}</div>
+            <!--
                 @change="doEmail"
                 v-model="email"
-            >
-            <span class="error-message">-- empty --</span>
-            <!--
-                <span xxx-show="maps.sports[3]">[ ]</span>
-                <span xxx="error.has('email')">{{ error.show('email') }}</span>
-                <span xxx="error.email)">{{ error.email) }}</span> => 試試看這個
             -->
-        </p>
+        </div>
 
         <p>
             sports
@@ -96,57 +100,23 @@
                 </span>
                 {{ getGender }}
                 {{ getSports }}
+
+                {{ first_name }}
             </div>
         </p>
 
         <input type="submit">
 
     </div>
+</div>
 </template>
+
 
 <script>
 import dateUtil from '../common/dateUtil.js';
+import verifier from '../common/verifier.js';
+import validatorUtil from '../common/validatorUtil.js';
 import Vue from 'vue';
-
-/**
- * validate RegExp rule
- */
-const verifier = {
-    email: function(value)
-    {
-        const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        if (! re.test(value.toLowerCase())) {
-            return false;
-        }
-        return true;
-    }
-};
-
-/**
- * form error control
- *      - 顯示錯誤 or 隱藏正確
- *      - 顯示自訂義的錯誤訊息
- *      - 包含 css class
- */
-const errorControl = (event, isValid, errorMessage) =>
-{
-    if (! errorMessage) {
-        errorMessage = 'You must enter the correct value';
-    }
-
-    const element = event.target;
-    let errorElement = element.parentElement.getElementsByClassName("error-message")[0];
-    if (! errorElement) {
-        return;
-    }
-
-    if (isValid) {
-        errorElement.classList.add("is_hidden");
-        return;
-    }
-    errorElement.classList.remove("is_hidden");
-    errorElement.innerHTML = errorMessage;
-};
 
 /**
  *
@@ -154,6 +124,9 @@ const errorControl = (event, isValid, errorMessage) =>
 const controller = {
     data: function () {
         return {
+            imports: {
+                first_name: "bob",
+            },
             maps: {
                 sports: [
                     {value: 0, text: 'handball'     },
@@ -170,8 +143,13 @@ const controller = {
             birthday_year: '',
             birthday_month: '',
             birthday_day: '',
-            // form_errors: [],     //  v-show="form_errors.has('email')" ??
-            // error: [],           //  v-show="error.email" ??
+
+            // form errors
+            error: [],
+
+            // 由於 bind 會延遲而導至無法在正確的時間 rander, 在此利用了 v-model 的方法來觸發
+            // <span v-model="render_count"></span>
+            render_count: 0,
         };
     },
     watch: {
@@ -213,30 +191,26 @@ const controller = {
         },
     },
     methods: {
-        doFirstName: function()
-        {
-            // console.log('doFirstName');
-        },
-        doEmail: function (event)
-        {
-            const isValid = verifier.email(this.email);
-            errorControl(event, isValid);
-        },
     },
-    created: function () {
-        //console.log(1);
-        //Vue.use(VeeValidate);
+    mounted: function () {
+        validatorUtil.run(this, (info) => {
+            console.log(info);
+            if (info.isError) {
+                // this.error[info.target.name] = 'is error';
+            }
+            this.render_count++;
+        });
     },
-}
+};
+
+
+// debug only
+//window.controller = controller;
+
 
 export default controller;
 </script>
 
+
 <style>
-.is_hidden {
-    display: none;
-}
-.error-message {
-    color: red;
-}
 </style>
