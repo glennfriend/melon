@@ -46,6 +46,7 @@ const _ = {
 
         return elements;
     },
+
 };
 
 const eventControl = {
@@ -86,6 +87,7 @@ const eventControl = {
         });
 
     },
+
 };
 
 
@@ -101,10 +103,9 @@ export default class validatorUtil
     /**
      * bind 所有擁有 name 的 element
      *      - input     is on change
+     *      - select    is on change
      *      - checkbox  is on click
      *      - radio     is on click
-     *      - select    is onchange
-     *
      *
      * @param function, 供給最外部使用
      */
@@ -114,7 +115,6 @@ export default class validatorUtil
         for (let key in elements) {
             let element = elements[key];
             let eventType = _.getEventNameMatchType(element.type);
-
             if (! eventType) {
                 console.log('Warring: type not listen event:' + element.type);
                 continue;
@@ -124,8 +124,23 @@ export default class validatorUtil
             element.addEventListener(eventType, function(event) {
                 eventControl.doValidate(event);
             });
-
         }
     }
+
+    static dispatchAll()
+    {
+        let elements = _.getHaveNameFormElements();
+        for (let key in elements) {
+            let element = elements[key];
+            let eventType = _.getEventNameMatchType(element.type);
+            if (! eventType) {
+                continue;
+            }
+
+            element.dispatchEvent(new Event(eventType));
+        }
+    }
+
+    
 
 }

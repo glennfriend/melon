@@ -16,19 +16,15 @@
                 :class="{'is-invalid':error.first_name }"
                 data-validate="required|min:5"
             >
-        </div>
+            <div class="invalid-feedback" v-show="error.first_name">{{ error.first_name }}</div>
 
-        <div class="form-group">
             <label for="emailFor">Email address</label>
             <input type="email" name="email" class="form-control" id="emailFor" placeholder="your@email.com"
                 :class="{'is-invalid':error.email }"
                 v-model="email"
-                data-validate="required|email">
+                data-validate="email"
+            >
             <div class="invalid-feedback" v-show="error.email">{{ error.email }}</div>
-            <!--
-                @change="doEmail"
-                v-model="email"
-            -->
         </div>
 
         <p>
@@ -100,12 +96,10 @@
                 </span>
                 {{ getGender }}
                 {{ getSports }}
-
-                {{ first_name }}
             </div>
         </p>
 
-        <input type="submit">
+        <input type="button" value="validate all" onclick="publicFormController.validateAll()">
 
     </div>
 </div>
@@ -194,7 +188,7 @@ const controller = {
     },
     mounted: function () {
         validatorUtil.run(this, (info) => {
-            console.log(info);
+            // console.log(info);
             if (info.isError) {
                 // this.error[info.target.name] = 'is error';
             }
@@ -205,7 +199,12 @@ const controller = {
 
 
 // debug only
-//window.controller = controller;
+window.publicFormController = {
+    validateAll: function()
+    {
+        validatorUtil.dispatchAll();
+    },
+};
 
 
 export default controller;
