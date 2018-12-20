@@ -1,16 +1,16 @@
 
-### ±`¥Îªº¿W¥ß CSS + JS ¤u¨ã
+### å¸¸ç”¨çš„ç¨ç«‹ CSS + JS å·¥å…·
 - common CSS
 - common JavaScript
 
-### ¨ä¥¦¸É§U¤u¨ã
+### å…¶å®ƒè£œåŠ©å·¥å…·
 - https://jsfiddle.net/
 
-### ¿í´`³W«h
+### éµå¾ªè¦å‰‡
 - http://www.infoq.com/cn/articles/guide-to-better-css
-- ¥u¹ï¨C­Ó²Õ¥ó¶i¦æ¤@¦¸¼Ë¦¡³]­p
-- ­­©w¯S©w¼Ë¦¡ªº­S³ò
-- «O«ùÂ²³æ
+- åªå°æ¯å€‹çµ„ä»¶é€²è¡Œä¸€æ¬¡æ¨£å¼è¨­è¨ˆ
+- é™å®šç‰¹å®šæ¨£å¼çš„èŒƒåœ
+- ä¿æŒç°¡å–®
 
 ### Install & develop & build
 ```sh
