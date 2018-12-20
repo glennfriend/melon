@@ -3,7 +3,7 @@
 # ==================================================
 
 # no index
-Options -Indexes
+# Options -Indexes
 
 # private files
 <FilesMatch "\.(bak|backup|save|config|inc|ini|env|sql|log|tar|gz|zip)$">
